@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.airneis_sdv_app.screens.CartScreen
 import com.example.airneis_sdv_app.screens.MainScreen
 import com.example.airneis_sdv_app.screens.ProductScreen
 
@@ -25,8 +26,11 @@ class MainActivity : ComponentActivity() {
                     composable("productScreen/{categoryName}") { backStackEntry ->
                         val categoryName = backStackEntry.arguments?.getString("categoryName")
                         categoryName?.let {
-                            ProductScreen(categoryName = it)
+                            ProductScreen(categoryName = it, navController = navController)
                         }
+                    }
+                    composable("CartScreen"){
+                        CartScreen(navController = navController)
                     }
                 }
             }

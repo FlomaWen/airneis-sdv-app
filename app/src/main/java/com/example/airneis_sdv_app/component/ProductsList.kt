@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.airneis_sdv_app.model.CartManager
 import com.example.airneis_sdv_app.model.Products
 
 @Composable
@@ -77,7 +78,7 @@ fun ProductItem(product: Products) {
             )
             Spacer(modifier = Modifier.width(40.dp))
             Button(
-                onClick = { /* TODO: handle add to cart */ },
+                onClick = { CartManager.addToCart(product) },
                 modifier = Modifier
                     .height(36.dp)
                     .width(120.dp)

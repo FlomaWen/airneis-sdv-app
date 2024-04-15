@@ -30,3 +30,4 @@ enum class Products(
     Frigo(title = "Frigo", category = "CUISINE", imageID = R.drawable.frigo, description = "Frigo en bois", price = "1000", stock = 10, createdAt = "2021-10-01", updatedAt = "2021-10-01"),
     Four(title = "Four", category = "CUISINE", imageID = R.drawable.four, description = "Four en bois", price = "1000", stock = 10, createdAt = "2021-10-01", updatedAt = "2021-10-01"),
 }
+

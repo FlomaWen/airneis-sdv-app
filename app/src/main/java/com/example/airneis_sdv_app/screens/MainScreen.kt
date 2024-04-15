@@ -73,10 +73,11 @@ fun MainScreen(navController: NavController) {
     ) {
         CustomDrawer(
             selectedNavigationItem = selectedNavigationItem,
+            navController = navController,
             onNavigationItemClick = {
                 selectedNavigationItem = it
             },
-            onCloseClick = { drawerState = CustomDrawerState.Closed }
+            onCloseClick = { drawerState = CustomDrawerState.Closed}
         )
         MainContent(
             navController = navController,

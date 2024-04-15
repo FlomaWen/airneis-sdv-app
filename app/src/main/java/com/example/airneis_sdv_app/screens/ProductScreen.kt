@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.airneis_sdv_app.component.AppTopBar
 import com.example.airneis_sdv_app.component.CustomDrawer
 import com.example.airneis_sdv_app.component.ProductList
@@ -37,7 +38,7 @@ import com.example.airneis_sdv_app.util.coloredShadow
 import kotlin.math.roundToInt
 
 @Composable
-fun ProductScreen(categoryName: String) {
+fun ProductScreen(categoryName: String,navController: NavController) {
     var drawerState by remember { mutableStateOf(CustomDrawerState.Closed) }
     var selectedNavigationItem by remember { mutableStateOf(NavigationItem.Home) }
 
@@ -71,12 +72,14 @@ fun ProductScreen(categoryName: String) {
     ) {
         CustomDrawer(
             selectedNavigationItem = selectedNavigationItem,
+            navController = navController,
             onNavigationItemClick = {
                 selectedNavigationItem = it
             },
-            onCloseClick = { drawerState = CustomDrawerState.Closed }
+            onCloseClick = { drawerState = CustomDrawerState.Closed}
         )
         ProductContent(
+            navController = navController,
             modifier = Modifier
                 .offset(x = animatedOffset)
                 .scale(scale = animatedScale)
@@ -97,6 +100,7 @@ fun ProductContent(
     drawerState: CustomDrawerState,
     onDrawerClick: (CustomDrawerState) -> Unit,
     categoryName: String,
+    navController: NavController,
     modifier: Modifier
 ) {
     val productsInCategory = Products.entries.filter {
