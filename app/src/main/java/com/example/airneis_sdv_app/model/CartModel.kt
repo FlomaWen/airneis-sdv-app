@@ -1,12 +1,14 @@
 package com.example.airneis_sdv_app.model
 
+import androidx.compose.runtime.mutableStateListOf
+
 data class CartItem(
     val product: Products,
     var quantity: Int
 )
 
 object CartManager {
-    private val items = mutableListOf<CartItem>()
+    private val items = mutableStateListOf<CartItem>()
 
     fun addToCart(product: Products, quantity: Int = 1) {
         val existingItem = items.find { it.product == product }
