@@ -9,22 +9,27 @@ enum class NavigationItem(
 ) {
     Home(
         icon = R.drawable.baseline_home_filled_24,
-        title = "Home",
+        title = "Accueil",
         route = "MainScreen"
+    ),
+    Categories(
+        icon = R.drawable.baseline_weekend_24,
+        title = "Catégories",
+        route = "CategoriesScreen"
     ),
     Profile(
         icon = R.drawable.baseline_person_24,
-        title = "Profile",
+        title = "Profil",
         route = "ProfileScreen"
     ),
     Settings(
         icon = R.drawable.baseline_settings_24,
-        title = "Settings",
+        title = "Paramètres",
         route = "SettingsScreen"
     ),
     Cart(
         icon = R.drawable.baseline_shopping_cart_24,
-        title = "Cart",
+        title = "Panier",
         route = "CartScreen"
     )
 }

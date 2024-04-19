@@ -80,4 +80,3 @@ fun CategoryView(category: Categories,navController: NavController) {
         )
     }
 }
-
