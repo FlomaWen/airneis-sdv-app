@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.airneis_sdv_app.model.NavigationItem
+import com.example.airneis_sdv_app.ui.theme.BlueAIRNEIS
 
 @Composable
 fun NavigationItemView(
@@ -45,13 +46,13 @@ fun NavigationItemView(
         Icon(
             painter = painterResource(id = navigationItem.icon),
             contentDescription = "Navigation Item Icon",
-            tint = if (selected) MaterialTheme.colorScheme.primary
+            tint = if (selected) BlueAIRNEIS
             else MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = navigationItem.title,
-            color = if (selected) MaterialTheme.colorScheme.primary
+            color = if (selected) BlueAIRNEIS
             else MaterialTheme.colorScheme.onSurface,
             fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
             lineHeight = 20.sp

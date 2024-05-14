@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.Icon
@@ -22,47 +24,45 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.airneis_sdv_app.model.Categories
-
-
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import com.example.airneis_sdv_app.R
+import com.example.airneis_sdv_app.model.Category
 @Composable
-fun CategoriesList(categories: List<Categories>, navController: NavController) {
-    LazyColumn {
-        items(categories) { category ->
-            Log.d("CategoryDebug", "Loading category: ${category.title}")
-            CategoryView(category, navController)
-        }
-    }
-}
-@Composable
-fun CategoryView(category: Categories,navController: NavController) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 4.dp)
-        .background(Color.White)
+fun CategoryView(category: Category, navController: NavController) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp)
+            .background(Color.White),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .background(Color.White),
-            horizontalArrangement = Arrangement.SpaceBetween,
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = category.title,
+                text = category.name,
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.Black,
-                modifier = Modifier.padding(8.dp).align(Alignment.CenterVertically)
+                modifier = Modifier.align(Alignment.CenterVertically)
             )
-            Spacer(modifier = Modifier.weight(1f, true))
+            Spacer(modifier = Modifier.weight(1f))
             IconButton(
-                onClick = { navController.navigate("productScreen/${category.title}") },
-                modifier = Modifier.size(24.dp)
+                onClick = { navController.navigate("productScreen/${category.id}") },
+                modifier = Modifier.size(24.dp).align(Alignment.CenterVertically)
             ) {
                 Icon(
                     imageVector = Icons.Filled.ArrowForward,
@@ -71,12 +71,31 @@ fun CategoryView(category: Categories,navController: NavController) {
                 )
             }
         }
-        Image(
-            painter = painterResource(id = category.imageIDCat),
-            contentDescription = category.title,
+        Text(
+            text = category.description,
+            textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(150.dp)
+                .padding(top = 8.dp)
         )
+        Spacer(modifier = Modifier.height(16.dp))
+        category.thumbnail?.filename?.let { filename ->
+            Image(
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(data = "https://c1bb0d8a5f1d.airneis.net/medias/serve/$filename")
+                        .apply(block = fun ImageRequest.Builder.() {
+                            error(R.drawable.baseline_error_24)
+                        }).build()
+                ),
+                contentDescription = "Category Image",
+                modifier = Modifier
+                    .width(300.dp)
+                    .height(150.dp)
+                    .clip(RoundedCornerShape(12.dp)),
+                contentScale = ContentScale.Crop
+            )
+        }
     }
 }
+

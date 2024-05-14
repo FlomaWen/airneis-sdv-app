@@ -1,5 +1,6 @@
-package com.example.airneis_sdv_app.screens
+package com.example.airneis_sdv_app.view
 
+import ProductViewModel
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -14,6 +15,8 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -31,20 +35,28 @@ import com.example.airneis_sdv_app.component.CustomDrawer
 import com.example.airneis_sdv_app.component.ProductList
 import com.example.airneis_sdv_app.model.CustomDrawerState
 import com.example.airneis_sdv_app.model.NavigationItem
-import com.example.airneis_sdv_app.model.Products
+import com.example.airneis_sdv_app.model.Product
 import com.example.airneis_sdv_app.model.isOpened
 import com.example.airneis_sdv_app.model.opposite
 import com.example.airneis_sdv_app.util.coloredShadow
+import com.example.airneis_sdv_app.viewmodel.CategoryViewModel
+import isUserLoggedIn
 import kotlin.math.roundToInt
 
 @Composable
-fun ProductScreen(categoryName: String,navController: NavController) {
-    var drawerState by remember { mutableStateOf(CustomDrawerState.Closed) }
-    var selectedNavigationItem by remember { mutableStateOf(NavigationItem.Home) }
+fun ProductScreen(
+    categoryId: Int,
+    navController: NavController,
+    categoryViewModel: CategoryViewModel,
+    productViewModel: ProductViewModel) {
+    val categoryState = categoryViewModel.categories.collectAsState()
+    val categoryName = categoryState.value.find { it.id == categoryId }?.name ?: "Catégorie Inconnue"
 
+    /* Drawer */
+    var drawerState by remember { mutableStateOf(CustomDrawerState.Closed) }
+    var selectedNavigationItem by remember { mutableStateOf(NavigationItem.Categories) }
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current.density
-
     val screenWidth = remember {
         derivedStateOf { (configuration.screenWidthDp * density).roundToInt() }
     }
@@ -57,10 +69,18 @@ fun ProductScreen(categoryName: String,navController: NavController) {
         targetValue = if (drawerState.isOpened()) 0.9f else 1f,
         label = "Animated Scale"
     )
-
     BackHandler(enabled = drawerState.isOpened()) {
         drawerState = CustomDrawerState.Closed
     }
+
+
+    LaunchedEffect(categoryId) {
+        productViewModel.getProductsByCategory(categoryId)
+    }
+
+    val products = productViewModel.products.collectAsState().value
+
+
 
     Box(
         modifier = Modifier
@@ -76,10 +96,11 @@ fun ProductScreen(categoryName: String,navController: NavController) {
             onNavigationItemClick = {
                 selectedNavigationItem = it
             },
-            onCloseClick = { drawerState = CustomDrawerState.Closed}
+            onCloseClick = { drawerState = CustomDrawerState.Closed},
+            categories = categoryState.value,
+            isUserLoggedIn = isUserLoggedIn(LocalContext.current)
         )
         ProductContent(
-            navController = navController,
             modifier = Modifier
                 .offset(x = animatedOffset)
                 .scale(scale = animatedScale)
@@ -90,7 +111,8 @@ fun ProductScreen(categoryName: String,navController: NavController) {
                 ),
             drawerState = drawerState,
             onDrawerClick = { drawerState = it },
-            categoryName = categoryName
+            categoryName = categoryName,
+            products = products
         )
     }
 }
@@ -100,12 +122,9 @@ fun ProductContent(
     drawerState: CustomDrawerState,
     onDrawerClick: (CustomDrawerState) -> Unit,
     categoryName: String,
-    navController: NavController,
+    products: List<Product>,
     modifier: Modifier
 ) {
-    val productsInCategory = Products.entries.filter {
-        it.category.equals(categoryName, ignoreCase = true)
-    }
 
     Scaffold(
         modifier = modifier
@@ -126,7 +145,7 @@ fun ProductContent(
                     .fillMaxSize()
                     .background(Color.White)
             ) {
-                ProductList(products = productsInCategory)
+                ProductList(products = products)
             }
         }
     )

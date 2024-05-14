@@ -19,17 +19,17 @@ enum class NavigationItem(
     ),
     Profile(
         icon = R.drawable.baseline_person_24,
-        title = "Profil",
-        route = "ProfileScreen"
-    ),
-    Settings(
-        icon = R.drawable.baseline_settings_24,
-        title = "Paramètres",
-        route = "SettingsScreen"
+        title = "Connexion",
+        route = "LoginScreen"
     ),
     Cart(
         icon = R.drawable.baseline_shopping_cart_24,
         title = "Panier",
         route = "CartScreen"
+    ),
+    Logout(
+        icon = R.drawable.baseline_logout_24,
+        title = "Se déconnecter",
+        route = "LogoutScreen"
     )
 }

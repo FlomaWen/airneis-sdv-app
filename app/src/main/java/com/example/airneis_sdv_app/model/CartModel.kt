@@ -1,31 +1,10 @@
 package com.example.airneis_sdv_app.model
 
-import androidx.compose.runtime.mutableStateListOf
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CartItem(
-    val product: Products,
+    val product: Product,
     var quantity: Int
 )
 
-object CartManager {
-    private val items = mutableStateListOf<CartItem>()
-
-    fun addToCart(product: Products, quantity: Int = 1) {
-        val existingItem = items.find { it.product == product }
-        if (existingItem != null) {
-            existingItem.quantity += quantity
-        } else {
-            items.add(CartItem(product, quantity))
-        }
-    }
-
-    fun getItems(): List<CartItem> = items
-
-    fun removeItem(cartItem: CartItem) {
-        items.remove(cartItem)
-    }
-
-    fun clearCart() {
-        items.clear()
-    }
-}

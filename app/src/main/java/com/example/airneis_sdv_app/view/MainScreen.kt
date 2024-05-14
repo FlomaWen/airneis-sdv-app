@@ -1,4 +1,4 @@
-package com.example.airneis_sdv_app.screens
+package com.example.airneis_sdv_app.view
 
 import android.annotation.SuppressLint
 import androidx.activity.compose.BackHandler
@@ -39,6 +39,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -51,32 +52,40 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.airneis_sdv_app.R
 import com.example.airneis_sdv_app.component.AppTopBar
 import com.example.airneis_sdv_app.component.CategoryView
 import com.example.airneis_sdv_app.component.CustomDrawer
-import com.example.airneis_sdv_app.model.Categories
+import com.example.airneis_sdv_app.model.Category
 import com.example.airneis_sdv_app.model.CustomDrawerState
 import com.example.airneis_sdv_app.model.NavigationItem
 import com.example.airneis_sdv_app.model.isOpened
 import com.example.airneis_sdv_app.model.opposite
 import com.example.airneis_sdv_app.util.coloredShadow
+import com.example.airneis_sdv_app.viewmodel.CategoryViewModel
+import isUserLoggedIn
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(navController: NavController,categoryViewModel: CategoryViewModel = viewModel()) {
     var drawerState by remember { mutableStateOf(CustomDrawerState.Closed) }
     var selectedNavigationItem by remember { mutableStateOf(NavigationItem.Home) }
-
+    val categoriesState = categoryViewModel.categories.collectAsState()
+    LaunchedEffect(true) {
+        categoryViewModel.getCategories()
+    }
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current.density
+
 
     val screenWidth = remember {
         derivedStateOf { (configuration.screenWidthDp * density).roundToInt() }
@@ -109,7 +118,9 @@ fun MainScreen(navController: NavController) {
             onNavigationItemClick = {
                 selectedNavigationItem = it
             },
-            onCloseClick = { drawerState = CustomDrawerState.Closed}
+            onCloseClick = { drawerState = CustomDrawerState.Closed},
+            categories = categoriesState.value,
+            isUserLoggedIn = isUserLoggedIn(LocalContext.current)
         )
         MainContent(
             navController = navController,
@@ -122,7 +133,7 @@ fun MainScreen(navController: NavController) {
                     shadowRadius = 50.dp
                 ),
             drawerState = drawerState,
-            onDrawerClick = { drawerState = it }
+            onDrawerClick = { drawerState = it },categories = categoriesState.value
         )
     }
 }
@@ -133,7 +144,8 @@ fun MainContent(
     modifier: Modifier = Modifier,
     drawerState: CustomDrawerState,
     onDrawerClick: (CustomDrawerState) -> Unit,
-    navController: NavController
+    navController: NavController,
+    categories: List<Category>
 ) {
     Scaffold(
         modifier = modifier
@@ -154,7 +166,7 @@ fun MainContent(
                     Spacer(modifier = Modifier.height(55.dp))
                     Caroussel(modifier = Modifier.fillMaxWidth())
                 }
-                items(Categories.entries) { category ->
+                items(categories) { category ->
                     CategoryView(category, navController)
                 }
             }
@@ -263,6 +275,7 @@ fun Caroussel(modifier: Modifier) {
             currentPage = pagerState.currentPage,
             modifier = Modifier.padding(vertical = 8.dp).background(Color.Transparent)
         )
+
     }
 }
 

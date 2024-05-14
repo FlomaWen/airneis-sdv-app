@@ -18,16 +18,21 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import com.example.airneis_sdv_app.viewmodel.LogoutViewModel
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.airneis_sdv_app.model.Categories
+import com.example.airneis_sdv_app.model.Category
 import com.example.airneis_sdv_app.model.NavigationItem
 
 
@@ -36,9 +41,23 @@ fun CustomDrawer(
     selectedNavigationItem: NavigationItem,
     navController: NavController,
     onNavigationItemClick: (NavigationItem) -> Unit,
-    onCloseClick: () -> Unit
+    onCloseClick: () -> Unit,
+    categories:List<Category>,
+    isUserLoggedIn: Boolean,
+    logoutViewModel: LogoutViewModel = viewModel()
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val logoutSuccess by logoutViewModel.logoutSuccessful.collectAsState()
+    val context = LocalContext.current
+
+    LaunchedEffect(logoutSuccess) {
+        if (logoutSuccess) {
+            navController.navigate("LoginScreen") {
+                popUpTo("MainScreen") { inclusive = true }
+            }
+            logoutViewModel.resetLogoutState()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -62,7 +81,7 @@ fun CustomDrawer(
         }
         Spacer(modifier = Modifier.height(40.dp))
 
-        NavigationItem.entries.filter { it != NavigationItem.Settings }.forEach { navigationItem ->
+        NavigationItem.entries.filter { it != NavigationItem.Logout }.forEach { navigationItem ->
             if (navigationItem == NavigationItem.Categories) {
                 Row(
                     modifier = Modifier
@@ -83,13 +102,13 @@ fun CustomDrawer(
                     )
                 }
                 if (expanded) {
-                    Categories.entries.forEach { category ->
+                    categories.forEach { category ->
                         Text(
-                            text = category.title,
+                            text = category.name,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clickable {
-                                    navController.navigate("categoryScreen/${category.id}")
+                                    navController.navigate("productScreen/${category.id}")
                                     expanded = false
                                 }
                                 .padding(start = 40.dp,)
@@ -115,11 +134,15 @@ fun CustomDrawer(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        NavigationItemView(
-            navigationItem = NavigationItem.Settings,
-            selected = NavigationItem.Settings == selectedNavigationItem,
-            onClick = { onNavigationItemClick(NavigationItem.Settings) }
-        )
+        if (isUserLoggedIn) {
+            NavigationItemView(
+                navigationItem = NavigationItem.Logout,
+                selected = NavigationItem.Logout == selectedNavigationItem,
+                onClick = {
+                    logoutViewModel.performLogout(context)
+                }
+            )
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
     }
