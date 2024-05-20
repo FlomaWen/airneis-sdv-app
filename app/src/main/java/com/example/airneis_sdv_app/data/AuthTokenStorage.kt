@@ -1,5 +1,6 @@
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.google.gson.Gson
@@ -28,5 +29,12 @@ fun isUserLoggedIn(context: Context): Boolean {
     val prefs = provideEncryptedSharedPreferences(context)
     val accessToken = prefs.getString("accessToken", null)
     return !accessToken.isNullOrEmpty()
+}
+
+fun getAccessToken(context: Context): String? {
+    val prefs = provideEncryptedSharedPreferences(context)
+    val token = prefs.getString("accessToken", null)
+    Log.d("CartManager", "Access token: $token")
+    return token
 }
 

@@ -61,6 +61,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("androidx.security:security-crypto:1.1.0-alpha03")
+    implementation(libs.play.services.drive)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

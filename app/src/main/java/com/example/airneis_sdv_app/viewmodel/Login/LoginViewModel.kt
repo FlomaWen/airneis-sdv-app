@@ -24,6 +24,10 @@ class LoginViewModel(private val context:Context) : ViewModel() {
     private val _uiState = MutableStateFlow(LoginState())
     val uiState = _uiState.asStateFlow()
 
+    private val _errorMessage = MutableStateFlow<String>("")
+    val errorMessage = _errorMessage.asStateFlow()
+
+
     fun onEvent(event: LoginUIEvent) {
         when (event) {
             is LoginUIEvent.EmailChanged -> _uiState.value = _uiState.value.copy(email = event.email)
@@ -40,6 +44,9 @@ class LoginViewModel(private val context:Context) : ViewModel() {
         )
         viewModelScope.launch {
             val result = loginUser(userData, context)
+            if (!result.success) {
+                _errorMessage.value = result.message
+            }
             _uiState.value = _uiState.value.copy(isLoading = false, isSuccess = result.success, tokens = result.tokens)
         }
     }

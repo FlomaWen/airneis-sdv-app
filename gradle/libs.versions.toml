@@ -1,7 +1,7 @@
 [versions]
 accompanistPager = "<version>"
 accompanistPagerVersion = "0.24.9-alpha"
-agp = "8.3.1"
+agp = "8.4.0"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -12,6 +12,7 @@ activityCompose = "1.7.0"
 composeBom = "2023.08.00"
 material3Android = "1.2.1"
 navigationCompose = "2.7.7"
+playServicesDrive = "17.0.0"
 
 [libraries]
 accompanist-pager = { module = "com.google.accompanist:accompanist-pager", version.ref = "accompanistPager" }
@@ -32,6 +33,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+play-services-drive = { group = "com.google.android.gms", name = "play-services-drive", version.ref = "playServicesDrive" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

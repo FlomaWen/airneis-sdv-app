@@ -20,18 +20,19 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.airneis_sdv_app.component.AppTopBar
 import com.example.airneis_sdv_app.component.CustomDrawer
-import com.example.airneis_sdv_app.viewmodel.CartManager
+import com.example.airneis_sdv_app.viewmodel.CartViewModel
 import com.example.airneis_sdv_app.model.CartItem
 import com.example.airneis_sdv_app.model.CustomDrawerState
 import com.example.airneis_sdv_app.model.NavigationItem
 import com.example.airneis_sdv_app.model.isOpened
 import com.example.airneis_sdv_app.ui.theme.BlueAIRNEIS
+import com.example.airneis_sdv_app.viewmodel.CartViewModel.items
 import com.example.airneis_sdv_app.viewmodel.CategoryViewModel
 import com.example.airneis_sdv_app.viewmodel.Login.LoginViewModel
 import isUserLoggedIn
 import kotlin.math.roundToInt
 @Composable
-fun CartScreen(navController: NavHostController,categoryViewModel: CategoryViewModel) {
+fun CartScreen(navController: NavHostController, categoryViewModel: CategoryViewModel) {
     var drawerState by remember { mutableStateOf(CustomDrawerState.Closed) }
     var selectedNavigationItem by remember { mutableStateOf(NavigationItem.Cart) }
     val categoriesState = categoryViewModel.categories.collectAsState()
@@ -51,6 +52,15 @@ fun CartScreen(navController: NavHostController,categoryViewModel: CategoryViewM
         label = "Animated Scale"
     )
 
+    val context = LocalContext.current
+    val isUserLoggedIn = isUserLoggedIn(context)
+
+    var items by remember { mutableStateOf(emptyList<CartItem>()) }
+    LaunchedEffect(key1 = CartViewModel.items) {
+        CartViewModel.loadCartFromAPI(context) { cartItems ->
+            items = cartItems
+        }
+    }
     Box(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
@@ -71,7 +81,7 @@ fun CartScreen(navController: NavHostController,categoryViewModel: CategoryViewM
             },
             onCloseClick = { drawerState = CustomDrawerState.Closed },
             categories = categoriesState.value,
-            isUserLoggedIn = isUserLoggedIn(LocalContext.current)
+            isUserLoggedIn = isUserLoggedIn
         )
         Scaffold(
             modifier = Modifier
@@ -80,24 +90,34 @@ fun CartScreen(navController: NavHostController,categoryViewModel: CategoryViewM
             topBar = {
                 AppTopBar(
                     title = "ÀIRNEIS - MON PANIER",
-                    onMenuClick = { drawerState =
-                        if (drawerState.isOpened()) CustomDrawerState.Closed else CustomDrawerState.Opened },
+                    onMenuClick = {
+                        drawerState = if (drawerState.isOpened()) CustomDrawerState.Closed else CustomDrawerState.Opened
+                    },
                     onSearchClick = { /* TODO Handle search click */ }
                 )
             }
         ) { padding ->
-            val items = CartManager.getItems()
-            val totalPrice = items.sumOf { it.quantity * it.product.price.toDouble() }
             Column(modifier = Modifier.padding(padding)) {
                 if (items.isEmpty()) {
                     Text("Votre panier est vide", style = MaterialTheme.typography.bodyLarge)
                 } else {
-                    items.forEach { cartItem ->
-                        CartItemView(cartItem)
+                    items.forEachIndexed { index, cartItem ->
+
+                        CartItemView(cartItem, context) {
+                            CartViewModel.removeFromCartAPI(context, cartItem.product.id)
+                            // Force a refresh of the cart items
+                            CartViewModel.loadCartFromAPI(context) { cartItems ->
+                                items = cartItems
+                            }
+                        }
+                        // Ajoutez un espacement entre les éléments, sauf pour le dernier
+                        if (index < items.size - 1) {
+                            Spacer(modifier = Modifier.height(16.dp))
+                        }
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    val totalPrice = items.sumOf { it.quantity * it.product.price.toDouble() }
                     Text("Total : $totalPrice €", style = MaterialTheme.typography.headlineMedium)
-                    CheckoutButton(navController, LocalContext.current)
+                    CheckoutButton(navController)
                 }
             }
         }
@@ -105,7 +125,7 @@ fun CartScreen(navController: NavHostController,categoryViewModel: CategoryViewM
 }
 
 @Composable
-fun CartItemView(cartItem: CartItem) {
+fun CartItemView(cartItem: CartItem, context: Context,onDeleteClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,25 +138,17 @@ fun CartItemView(cartItem: CartItem) {
             val totalPriceForItem = cartItem.product.price.toDouble() * cartItem.quantity
             Text("Prix total: $totalPriceForItem €", style = MaterialTheme.typography.bodySmall)
         }
-        IconButton(onClick = { CartManager.removeFromCart(cartItem) }) {
+        IconButton(onClick = onDeleteClick) {
             Icon(imageVector = Icons.Default.Delete, contentDescription = "Supprimer")
         }
     }
 }
 
 @Composable
-fun CheckoutButton(navController: NavHostController, context: Context) {
-    val isLoggedIn = remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        isLoggedIn.value = isUserLoggedIn(context)
-    }
-
-    if (isLoggedIn.value) {
+fun CheckoutButton(navController: NavHostController) {
         Button(
             onClick = {
                 navController.navigate("OrderScreen")
-
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = BlueAIRNEIS
@@ -144,14 +156,4 @@ fun CheckoutButton(navController: NavHostController, context: Context) {
         ) {
             Text("Commander")
         }
-    } else {
-        Text(
-            text = "Veuillez vous connecter pour passer commande.",
-            modifier = Modifier.clickable {
-                navController.navigate("LoginScreen")
-            },
-            style = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.primary),
-            textAlign = TextAlign.Center
-        )
-    }
 }

@@ -48,6 +48,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.airneis_sdv_app.component.AppTopBar
 import com.example.airneis_sdv_app.component.CustomDrawer
+import com.example.airneis_sdv_app.component.RegistrationForm
 import com.example.airneis_sdv_app.model.CustomDrawerState
 import com.example.airneis_sdv_app.model.NavigationItem
 import com.example.airneis_sdv_app.model.RegistrationUIState
@@ -126,88 +127,4 @@ fun SignUpScreen(categoryViewModel: CategoryViewModel, navController: NavControl
     }
 }
 
-@Composable
-fun RegistrationForm(
-    uiState: RegistrationUIState,
-    onNameChange: (String) -> Unit,
-    onEmailChange: (String) -> Unit,
-    onPasswordChange: (String) -> Unit,
-    onAcceptCookiesChange: (Boolean) -> Unit,
-    drawerState: CustomDrawerState,
-    onDrawerClick: (CustomDrawerState) -> Unit,
-    modifier: Modifier,
-    signupViewModel: SignupViewModel
-) {
-    Scaffold(
-        modifier = modifier,
-        topBar = {
-            AppTopBar(
-                title = "ÀIRNEIS - INSCRIPTION",
-                onMenuClick = {
-                    onDrawerClick(drawerState.opposite())
-                },
-                onSearchClick = { /* TODO Handle search */ }
-            )
-        },
-        content = { paddingValues ->
-            Box(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-                    .background(Color.White)
-                    .clickable(onClick = {
-                        if (drawerState == CustomDrawerState.Opened) onDrawerClick(
-                            CustomDrawerState.Closed
-                        )
-                    }),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
 
-                    Text(
-                        "Bienvenue !",
-                        style = MaterialTheme.typography.titleLarge,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-
-                    OutlinedTextField(
-                        value = uiState.name,
-                        onValueChange = onNameChange,
-                        label = { Text("Nom d'utilisateur") },
-                    )
-                    OutlinedTextField(
-                        value = uiState.email,
-                        onValueChange = onEmailChange,
-                        label = { Text("Email") },
-                    )
-                    OutlinedTextField(
-                        value = uiState.password,
-                        onValueChange = onPasswordChange,
-                        label = { Text("Mot de passe") },
-                        visualTransformation = PasswordVisualTransformation(),
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-                    )
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Checkbox(
-                            checked = uiState.acceptCookies,
-                            onCheckedChange = onAcceptCookiesChange
-                        )
-                        Text(text = "Accepter les cookies")
-                    }
-                    Button(
-                        onClick = { signupViewModel.onEvent(SignupUIEvent.RegisterButtonClicked) },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = BlueAIRNEIS
-                        )
-                    ) {
-                        Text("S'inscrire")
-                    }
-                }
-            }
-        }
-    )
-}

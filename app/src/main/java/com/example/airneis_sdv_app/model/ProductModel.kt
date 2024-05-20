@@ -1,107 +1,113 @@
-package com.example.airneis_sdv_app.model
-
-import com.google.gson.annotations.SerializedName
+import com.example.airneis_sdv_app.model.Category
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Serializable
 data class ProductsResponse(
-    @SerializedName("success")
+    @SerialName("success")
     val success: Boolean,
 
-    @SerializedName("products")
+    @SerialName("products")
     val products: List<Product>,
 
-    @SerializedName("limit")
+    @SerialName("limit")
     val limit: Int,
 
-    @SerializedName("page")
+    @SerialName("page")
     val page: Int,
 
-    @SerializedName("total")
+    @SerialName("total")
     val total: Int
 )
 
 @Serializable
 data class Product(
-    @SerializedName("priority")
+    @SerialName("priority")
     val priority: Int,
 
-    @SerializedName("id")
+    @SerialName("id")
     val id: Int,
 
-    @SerializedName("name")
+    @SerialName("name")
     val name: String,
 
-    @SerializedName("description")
+    @SerialName("description")
     val description: String,
 
-    @SerializedName("slug")
+    @SerialName("slug")
     val slug: String,
 
-    @SerializedName("price")
+    @SerialName("price")
     val price: String,
 
-    @SerializedName("stock")
+    @SerialName("stock")
     val stock: Int? = null,
 
-    @SerializedName("createdAt")
+    @SerialName("createdAt")
     val createdAt: String,
 
-    @SerializedName("updatedAt")
+    @SerialName("updatedAt")
     val updatedAt: String,
 
-    @SerializedName("category")
-    val category: Category?,
+    @SerialName("category")
+    val category: Category? = null,
 
-    @SerializedName("backgroundImage")
-    val backgroundImage: backgroundImage?,
+    @SerialName("backgroundImage")
+    val backgroundImage: BackgroundImage? = null,
 
-    @SerializedName("images")
-    val images: List<Image>? = null
+    @SerialName("images")
+    val images: List<Image>? = null,
+
+    @SerialName("materials")
+    val materials: List<Material>? = null
 )
 
 @Serializable
 data class Image(
-    @SerializedName("id")
+    @SerialName("id")
     val id: Int,
 
-    @SerializedName("name")
+    @SerialName("name")
     val name: String,
 
-    @SerializedName("filename")
+    @SerialName("filename")
     val filename: String,
 
-    @SerializedName("type")
+    @SerialName("type")
     val type: String,
 
-    @SerializedName("size")
+    @SerialName("size")
     val size: Int,
 
-    @SerializedName("createdAt")
+    @SerialName("createdAt")
     val createdAt: String,
 
-    @SerializedName("updatedAt")
+    @SerialName("updatedAt")
     val updatedAt: String
 )
+
 @Serializable
-data class backgroundImage(
-    @SerializedName("id")
+data class BackgroundImage(
+    @SerialName("id")
     val id: Int,
 
-    @SerializedName("name")
+    @SerialName("name")
     val name: String,
 
-    @SerializedName("filename")
+    @SerialName("filename")
     val filename: String,
 
-    @SerializedName("type")
+    @SerialName("type")
     val type: String,
 
-    @SerializedName("size")
+    @SerialName("size")
     val size: Int,
 
-    @SerializedName("createdAt")
+    @SerialName("createdAt")
     val createdAt: String,
 
-    @SerializedName("updatedAt")
+    @SerialName("updatedAt")
     val updatedAt: String
 )
+
+

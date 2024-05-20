@@ -42,7 +42,7 @@ fun CustomDrawer(
     navController: NavController,
     onNavigationItemClick: (NavigationItem) -> Unit,
     onCloseClick: () -> Unit,
-    categories:List<Category>,
+    categories: List<Category>,
     isUserLoggedIn: Boolean,
     logoutViewModel: LogoutViewModel = viewModel()
 ) {
@@ -82,13 +82,15 @@ fun CustomDrawer(
         Spacer(modifier = Modifier.height(40.dp))
 
         NavigationItem.entries.filter { it != NavigationItem.Logout }.forEach { navigationItem ->
-            if (navigationItem == NavigationItem.Categories) {
+            if (navigationItem == NavigationItem.Cart && !isUserLoggedIn) {
+                // Ne rien faire si l'utilisateur n'est pas connecté et que l'élément est le panier
+            } else if (navigationItem == NavigationItem.Categories) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable(onClick = { expanded = !expanded })
                         .padding(start = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
                         painter = painterResource(id = navigationItem.icon),
@@ -116,7 +118,7 @@ fun CustomDrawer(
                         )
                     }
                 }
-            } else {
+            } else if (navigationItem != NavigationItem.Profile || !isUserLoggedIn) {
                 NavigationItemView(
                     navigationItem = navigationItem,
                     selected = navigationItem == selectedNavigationItem,
@@ -128,8 +130,8 @@ fun CustomDrawer(
                         }
                     }
                 )
+                Spacer(modifier = Modifier.height(4.dp))
             }
-            Spacer(modifier = Modifier.height(4.dp))
         }
 
         Spacer(modifier = Modifier.weight(1f))

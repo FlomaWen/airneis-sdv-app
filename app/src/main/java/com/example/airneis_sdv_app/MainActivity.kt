@@ -1,11 +1,10 @@
 package com.example.airneis_sdv_app
 
-import ProductViewModel
+import com.example.airneis_sdv_app.viewmodel.ProductViewModel
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.collectAsState
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -15,20 +14,21 @@ import com.example.airneis_sdv_app.view.MainScreen
 import com.example.airneis_sdv_app.view.OrderScreen
 import com.example.airneis_sdv_app.view.ProductScreen
 import com.example.airneis_sdv_app.view.SignUpScreen
-import com.example.airneis_sdv_app.viewmodel.CartManager
+import com.example.airneis_sdv_app.viewmodel.CartViewModel
 import com.example.airneis_sdv_app.viewmodel.CategoryViewModel
+import com.example.airneis_sdv_app.viewmodel.MaterialsViewModel
 
 
 class MainActivity : ComponentActivity() {
     private val categoryViewModel by lazy { CategoryViewModel() }
     private val productViewModel by lazy { ProductViewModel() }
+    private val materialsViewModel by lazy { MaterialsViewModel() }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        CartManager.init(this)
+        CartViewModel.initialize(this)
         setContent {
             MaterialTheme {
                 val navController = rememberNavController()
-                val categories = categoryViewModel.categories.collectAsState().value
                 NavHost(navController = navController, startDestination = "mainScreen") {
                     composable("mainScreen") {
                         MainScreen(navController = navController,categoryViewModel = categoryViewModel)
@@ -39,7 +39,8 @@ class MainActivity : ComponentActivity() {
                             ProductScreen(
                                 categoryId = it, navController = navController,
                                 categoryViewModel = categoryViewModel,
-                                productViewModel = productViewModel)
+                                productViewModel = productViewModel,
+                                materialsViewModel = materialsViewModel)
                         }
                     }
                     composable("CartScreen"){

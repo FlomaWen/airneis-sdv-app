@@ -16,7 +16,9 @@ data class Category(
     val name: String,
     @SerializedName("description")
     val description: String,
-@SerializedName("createdAt")
+    @SerializedName("slug")
+    val slug: String,
+    @SerializedName("createdAt")
     val createdAt: String,
     @SerializedName("updatedAt")
     val updatedAt: String,

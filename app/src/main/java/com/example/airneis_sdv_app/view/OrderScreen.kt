@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.airneis_sdv_app.model.CartItem
-import com.example.airneis_sdv_app.viewmodel.CartManager
+import com.example.airneis_sdv_app.viewmodel.CartViewModel
 import com.example.airneis_sdv_app.component.AppTopBar
 import com.example.airneis_sdv_app.component.CustomDrawer
 import com.example.airneis_sdv_app.model.CustomDrawerState
@@ -94,17 +94,32 @@ fun OrderScreen(navController: NavHostController,
 
 
 @Composable
-fun OrderContent(navController :NavController,modifier: Modifier,drawerState:CustomDrawerState,onDrawerClick: (CustomDrawerState) -> Unit){
+fun OrderContent(
+    navController: NavController,
+    modifier: Modifier,
+    drawerState: CustomDrawerState,
+    onDrawerClick: (CustomDrawerState) -> Unit
+) {
     Scaffold(
         modifier = modifier
             .clickable(enabled = drawerState == CustomDrawerState.Opened) {
                 onDrawerClick(CustomDrawerState.Closed)
             },
         topBar = {
-            AppTopBar(title = "ÀIRNEIS - COMMANDE", onMenuClick = { onDrawerClick(drawerState.opposite()) }, onSearchClick = { /* Handle search click */ })
+            AppTopBar(
+                title = "ÀIRNEIS - COMMANDE",
+                onMenuClick = { onDrawerClick(drawerState.opposite()) },
+                onSearchClick = { /* Handle search click */ }
+            )
         }
     ) { paddingValues ->
-        val items = CartManager.getItems()
+        val context = LocalContext.current
+        var items by remember { mutableStateOf(emptyList<CartItem>()) }
+
+        CartViewModel.loadCartFromAPI(context) { cartItems ->
+            items = cartItems
+        }
+
         val total = items.sumOf { it.quantity * it.product.price.toDouble() }
 
         Column(modifier = Modifier.padding(paddingValues).padding(16.dp)) {
@@ -121,8 +136,7 @@ fun OrderContent(navController :NavController,modifier: Modifier,drawerState:Cus
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(
                     onClick = {
-                        // Ajouter la logique de commande ici
-                        // Par exemple, envoyer les données à un serveur ou passer à une page de paiement
+
                         navController.navigate("SuccessScreen")
                     },
                     modifier = Modifier.fillMaxWidth(),
@@ -136,6 +150,8 @@ fun OrderContent(navController :NavController,modifier: Modifier,drawerState:Cus
         }
     }
 }
+
+
 @Composable
 fun OrderItemView(cartItem: CartItem) {
     Row(

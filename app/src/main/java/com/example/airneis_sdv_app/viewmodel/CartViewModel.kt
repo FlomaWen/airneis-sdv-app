@@ -1,80 +1,188 @@
 package com.example.airneis_sdv_app.viewmodel
 
+import Product
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
+import androidx.lifecycle.ViewModel
 import com.example.airneis_sdv_app.model.CartItem
-import com.example.airneis_sdv_app.model.Product
+import com.example.airneis_sdv_app.model.CartResponse
+import getAccessToken
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import okhttp3.*
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.io.IOException
 
-object CartManager {
-    private val items = mutableStateListOf<CartItem>()
+object CartViewModel: ViewModel() {
+    val items = mutableListOf<CartItem>()
+    private const val PREF_CART_ITEMS = "pref_cart_items"
 
-    private lateinit var sharedPreferences: SharedPreferences
-
-    fun init(context: Context) {
-        sharedPreferences = context.getSharedPreferences("CartPrefs", Context.MODE_PRIVATE)
-        loadCart()
-    }
-    private fun saveCart() {
-        try {
-            val editor = sharedPreferences.edit()
-            val jsonCart = Json.encodeToString(items.toList())
-            editor.putString("cartItems", jsonCart)
-            editor.apply()
-            Log.d("CartManager", "Cart saved successfully")
-        } catch (e: Exception) {
-            Log.e("CartManager", "Error saving cart", e)
+    fun initialize(context: Context) {
+        val sharedPreferences = context.getSharedPreferences("cart_prefs", Context.MODE_PRIVATE)
+        val cartItemsJson = sharedPreferences.getString(PREF_CART_ITEMS, null)
+        if (cartItemsJson != null) {
+            items.addAll(Json.decodeFromString<List<CartItem>>(cartItemsJson))
         }
     }
 
-    // loadCart
-    fun loadCart() {
-        val jsonCart = sharedPreferences.getString("cartItems", null)
-        jsonCart?.let {
-            val savedItems = Json.decodeFromString<List<CartItem>>(it)
-            items.clear()
-            items.addAll(savedItems)
-        }
-    }
 
-    //clear cart
-    fun clearCart() {
-        items.clear()
-        saveCart()
-    }
+    fun addToCartAPI(context: Context, product: Product, quantity: Int) {
+        val url = "https://c1bb0d8a5f1d.airneis.net/api/user/basket"
+        val jsonBody = Json.encodeToString(mapOf("productId" to product.id, "quantity" to quantity))
+        val requestBody = jsonBody.toRequestBody("application/json".toMediaTypeOrNull())
 
-    //add item to cart
-    fun addToCart(product: Product, quantity: Int = 1) {
-        Log.d("CartManager", "Attempting to add to cart: ${product.name}, Quantity: $quantity")
-        val existingItem = items.find { it.product == product }
-        if (existingItem != null) {
-            Log.d("CartManager", "Product exists in cart. Current quantity: ${existingItem.quantity}")
-            existingItem.quantity += quantity
-            Log.d("CartManager", "New quantity: ${existingItem.quantity}")
-        } else {
-            Log.d("CartManager", "Product not found in cart. Adding new item.")
-            items.add(CartItem(product, quantity))
+        val accessToken = getAccessToken(context)
+        if (accessToken == null) {
+            Log.e("CartViewModel", "Failed to add item to cart: No access token available")
+            return
         }
 
-        Log.d("CartManager", "Saving cart")
-        saveCart()
-        Log.d("CartManager", "Cart saved successfully")
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("Authorization", "Bearer $accessToken")
+            .post(requestBody)
+            .build()
+
+        OkHttpClient().newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("CartManager", "Failed to add item to cartaaaaaa", e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    Log.d("CartViewModel", "Item added to cart successfully")
+                    loadCartFromAPI(context) { cartItems ->
+                        items.clear()
+                        items.addAll(cartItems)
+                    }
+                    saveCartToPrefs(context)
+                } else {
+                    Log.e("CartViewModel", "Failed to add item to cartzzzzz: ${response.message}")
+                    response.body?.let {
+                        Log.e("CartViewModel", "Response body: ${it.string()}")
+                    }
+                }
+            }
+        })
     }
 
+    fun loadCartFromAPI(context: Context, callback: (List<CartItem>) -> Unit) {
+        val url = "https://c1bb0d8a5f1d.airneis.net/api/user/basket"
 
-    //get Items
-    fun getItems(): List<CartItem> = items
-
-    // remove from cart
-    fun removeFromCart(cartItem: CartItem) {
-        val existingItem = items.find { it.product == cartItem.product }
-        if (existingItem != null) {
-            items.remove(existingItem)
-            saveCart()
+        val accessToken = getAccessToken(context)
+        if (accessToken == null) {
+            Log.e("CartViewModel", "Failed to load cart from API: No access token available")
+            return
         }
+
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("Authorization", "Bearer $accessToken")
+            .get()
+            .build()
+
+        OkHttpClient().newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("CartViewModel", "Failed to load cart from API", e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    response.body?.let { responseBody ->
+                        val responseJson = responseBody.string()
+                        val cartResponse = Json.decodeFromString<CartResponse>(responseJson)
+                        val cartItems = cartResponse.basket.map { CartItem(it.product, it.quantity) }
+                        callback(cartItems)
+                        Log.d("CartViewModel", "Cart loaded from API successfully")
+                    }
+
+                } else {
+                    Log.e("CartViewModel", "Failed to load cart from API: ${response.message}")
+                }
+            }
+        })
     }
 
+    fun removeFromCartAPI(context: Context, productId: Int) {
+        val url = "https://c1bb0d8a5f1d.airneis.net/api/user/basket"
+        val jsonBody = Json.encodeToString(mapOf("productId" to productId))
+        val requestBody = jsonBody.toRequestBody("application/json".toMediaTypeOrNull())
+
+        val accessToken = getAccessToken(context)
+        if (accessToken == null) {
+            Log.e("CartViewModel", "Failed to remove item from cart: No access token available")
+            return
+        }
+
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("Authorization", "Bearer $accessToken")
+            .delete(requestBody)
+            .build()
+
+        OkHttpClient().newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("CartViewModel", "Failed to remove item from cart", e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    Log.d("CartViewModel", "Item removed from cart successfully")
+                    // Charger à nouveau le panier après la suppression
+                    loadCartFromAPI(context) { cartItems ->
+                        items.clear()
+                        items.addAll(cartItems)
+                    }
+                    saveCartToPrefs(context)
+
+                } else {
+                    Log.e("CartViewModel", "Failed to remove item from cart: ${response.message}")
+                }
+            }
+        })
+    }
+
+    fun modifyQuantityFromAPI(context: Context, productId: Int, quantity: Int) {
+        val url = "https://c1bb0d8a5f1d.airneis.net/api/user/basket"
+        val jsonBody = Json.encodeToString(mapOf("productId" to productId, "quantity" to quantity))
+        val requestBody = jsonBody.toRequestBody("application/json".toMediaTypeOrNull())
+
+        val accessToken = getAccessToken(context)
+        if (accessToken == null) {
+            Log.e("CartViewModel", "Failed to modify quantity: No access token available")
+            return
+        }
+
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("Authorization", "Bearer $accessToken")
+            .patch(requestBody)
+            .build()
+
+        OkHttpClient().newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("CartViewModel", "Failed to modify quantity", e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    Log.d("CartManager", "Quantity modified successfully")
+                    loadCartFromAPI(context) { cartItems ->
+                        items.clear()
+                        items.addAll(cartItems)
+                    }
+                    saveCartToPrefs(context)
+
+                } else {
+                    Log.e("CartViewModel", "Failed to modify quantity: ${response.message}")
+                }
+            }
+        })
+    }
+    private fun saveCartToPrefs(context: Context) {
+        val sharedPreferences = context.getSharedPreferences("cart_prefs", Context.MODE_PRIVATE)
+        sharedPreferences.edit().putString(PREF_CART_ITEMS, Json.encodeToString(items)).apply()
+    }
 }
