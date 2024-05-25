@@ -3,6 +3,7 @@ package com.example.airneis_sdv_app.component
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,13 +40,32 @@ import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import com.example.airneis_sdv_app.R
 import com.example.airneis_sdv_app.model.Category
+import okhttp3.internal.wait
+
 @Composable
 fun CategoryView(category: Category, navController: NavController) {
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(16.dp)
+        .clickable {
+            navController.navigate("productScreen/${category.id}")
+        },
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 10.dp
+        ),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFebf2fe),
+        )
+
+    )
+    {
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
-            .background(Color.White),
+            .padding(vertical = 4.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
@@ -52,24 +74,12 @@ fun CategoryView(category: Category, navController: NavController) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Spacer(modifier = Modifier.weight(1f))
             Text(
                 text = category.name,
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.Black,
                 modifier = Modifier.align(Alignment.CenterVertically)
             )
-            Spacer(modifier = Modifier.weight(1f))
-            IconButton(
-                onClick = { navController.navigate("productScreen/${category.id}") },
-                modifier = Modifier.size(24.dp).align(Alignment.CenterVertically)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowForward,
-                    contentDescription = "Go Icon",
-                    tint = Color.Gray
-                )
-            }
         }
         Text(
             text = category.description,
@@ -98,4 +108,4 @@ fun CategoryView(category: Category, navController: NavController) {
         }
     }
 }
-
+}

@@ -10,7 +10,15 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.namespace == "com.android" && requested.id.name == "application") {
+                useModule("com.android.tools.build:gradle:8.3.1")
+            }
+        }
+    }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -21,4 +29,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "airneis-sdv-app"
 include(":app")
- 

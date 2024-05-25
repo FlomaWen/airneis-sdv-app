@@ -2,6 +2,7 @@ package com.example.airneis_sdv_app.viewmodel
 
 import Product
 import ProductsResponse
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
@@ -18,16 +19,19 @@ class ProductViewModel : ViewModel() {
     private val _products = MutableStateFlow<List<Product>>(emptyList())
     val products: StateFlow<List<Product>> = _products
 
-
-
-    fun getProducts(categoryId: Int,
-                    search: String? = null,
-                    minPrice: Float? = null,
-                    maxPrice: Float? = null,
-                    sortOrder: String? = null,
-                    order: String? = null) {
+    fun getProducts(
+        categoryId: Int,
+        search: String? = null,
+        minPrice: Float? = null,
+        maxPrice: Float? = null,
+        sortOrder: String? = null,
+        order: String? = null,
+        materials: List<String>? = null,
+        stock: String? = null
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
-            val url = buildUrl(categoryId, search, minPrice, maxPrice, sortOrder, order)
+            val url = buildUrl(categoryId, search, minPrice, maxPrice, sortOrder, order, materials, stock)
+            Log.d("ProductViewModel", "Request URL: $url")
             val connection = url.openConnection() as HttpURLConnection
             try {
                 connection.connect()
@@ -36,24 +40,40 @@ class ProductViewModel : ViewModel() {
                     val response = reader.readText()
                     reader.close()
 
+                    Log.d("ProductViewModel", "API Response: $response")
+
                     val productsResponse = Gson().fromJson(response, ProductsResponse::class.java)
-                    _products.value = productsResponse.products
+
+                    // Tri des produits en fonction du prix
+                    val sortedProducts = when (sortOrder) {
+                        "asc" -> productsResponse.products.sortedBy { it.price }
+                        "desc" -> productsResponse.products.sortedByDescending { it.price }
+                        else -> productsResponse.products
+                    }
+
+                    _products.value = sortedProducts
+                } else {
+                    Log.e("ProductViewModel", "API Error: ${connection.responseCode}")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
+                Log.e("ProductViewModel", "Exception: ${e.message}")
             } finally {
                 connection.disconnect()
             }
         }
-
     }
+
+
     private fun buildUrl(
         categoryId: Int,
         search: String?,
         minPrice: Float?,
         maxPrice: Float?,
         sortOrder: String?,
-        order: String?
+        order: String?,
+        materials: List<String>?,
+        stock : String?
     ): URL {
         val baseUrl = "https://c1bb0d8a5f1d.airneis.net/api/products"
         val parameters = mutableListOf<String>()
@@ -78,6 +98,15 @@ class ProductViewModel : ViewModel() {
             }
         }
 
+        // Add materials
+        materials?.let {
+            val materialsParam = it.joinToString(",")
+            parameters.add("materials=$materialsParam")
+        }
+
+        // Add stock
+        stock?.let { parameters.add("stock=$it") }
+
         // Join all parameters
         val urlWithParams = if (parameters.isNotEmpty()) {
             "$baseUrl?${parameters.joinToString("&")}"
@@ -87,5 +116,4 @@ class ProductViewModel : ViewModel() {
 
         return URL(urlWithParams)
     }
-
 }
