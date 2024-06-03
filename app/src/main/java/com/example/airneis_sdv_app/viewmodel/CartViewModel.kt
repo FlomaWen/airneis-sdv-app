@@ -2,17 +2,21 @@ package com.example.airneis_sdv_app.viewmodel
 
 import Product
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.airneis_sdv_app.model.CartItem
 import com.example.airneis_sdv_app.model.CartResponse
+import com.example.airneis_sdv_app.util.Config
 import getAccessToken
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import java.io.IOException
 
 object CartViewModel: ViewModel() {
@@ -29,7 +33,7 @@ object CartViewModel: ViewModel() {
 
 
     fun addToCartAPI(context: Context, product: Product, quantity: Int) {
-        val url = "https://c1bb0d8a5f1d.airneis.net/api/user/basket"
+        val url = "${Config.BASE_URL}/api/user/basket"
         val jsonBody = Json.encodeToString(mapOf("productId" to product.id, "quantity" to quantity))
         val requestBody = jsonBody.toRequestBody("application/json".toMediaTypeOrNull())
 
@@ -69,7 +73,7 @@ object CartViewModel: ViewModel() {
     }
 
     fun loadCartFromAPI(context: Context, callback: (List<CartItem>) -> Unit) {
-        val url = "https://c1bb0d8a5f1d.airneis.net/api/user/basket"
+        val url = "${Config.BASE_URL}/api/user/basket"
 
         val accessToken = getAccessToken(context)
         if (accessToken == null) {
@@ -106,7 +110,7 @@ object CartViewModel: ViewModel() {
     }
 
     fun removeFromCartAPI(context: Context, productId: Int) {
-        val url = "https://c1bb0d8a5f1d.airneis.net/api/user/basket"
+        val url = "${Config.BASE_URL}/api/user/basket"
         val jsonBody = Json.encodeToString(mapOf("productId" to productId))
         val requestBody = jsonBody.toRequestBody("application/json".toMediaTypeOrNull())
 
@@ -145,7 +149,7 @@ object CartViewModel: ViewModel() {
     }
 
     fun modifyQuantityFromAPI(context: Context, productId: Int, quantity: Int) {
-        val url = "https://c1bb0d8a5f1d.airneis.net/api/user/basket"
+        val url = "${Config.BASE_URL}/api/user/basket"
         val jsonBody = Json.encodeToString(mapOf("productId" to productId, "quantity" to quantity))
         val requestBody = jsonBody.toRequestBody("application/json".toMediaTypeOrNull())
 

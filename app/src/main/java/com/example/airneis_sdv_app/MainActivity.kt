@@ -12,7 +12,9 @@ import com.example.airneis_sdv_app.view.CartScreen
 import com.example.airneis_sdv_app.view.LoginScreen
 import com.example.airneis_sdv_app.view.MainScreen
 import com.example.airneis_sdv_app.view.OrderScreen
+import com.example.airneis_sdv_app.view.ProductDetailScreen
 import com.example.airneis_sdv_app.view.ProductScreen
+import com.example.airneis_sdv_app.view.SearchScreen
 import com.example.airneis_sdv_app.view.SignUpScreen
 import com.example.airneis_sdv_app.viewmodel.CartViewModel
 import com.example.airneis_sdv_app.viewmodel.CategoryViewModel
@@ -42,6 +44,24 @@ class MainActivity : ComponentActivity() {
                                 productViewModel = productViewModel,
                                 materialsViewModel = materialsViewModel)
                         }
+                    }
+                    composable("ProductDetailScreen/{categoryId}/{productId}") { backStackEntry ->
+                        val categoryId = backStackEntry.arguments?.getString("categoryId")?.toIntOrNull()
+                        val productId = backStackEntry.arguments?.getString("productId")?.toIntOrNull()
+                        categoryId?.let {
+                            productId?.let {
+                                ProductDetailScreen(
+                                    navController = navController,
+                                    categoryViewModel = categoryViewModel,
+                                    categoryId = it,
+                                    productId = productId,
+                                    productViewModel = productViewModel
+                                )
+                            }
+                        }
+                    }
+                    composable("SearchScreen") {
+                        SearchScreen(categoryViewModel = categoryViewModel, productViewModel = productViewModel,navController = navController,materialsViewModel = materialsViewModel)
                     }
                     composable("CartScreen"){
                         CartScreen(navController = navController,categoryViewModel = categoryViewModel)

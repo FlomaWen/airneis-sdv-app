@@ -1,7 +1,6 @@
 package com.example.airneis_sdv_app.component
 
 import Product
-import com.example.airneis_sdv_app.viewmodel.ProductViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,12 +36,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -57,19 +54,21 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.airneis_sdv_app.R
 import com.example.airneis_sdv_app.ui.theme.BlueAIRNEIS
+import com.example.airneis_sdv_app.util.Config
 import com.example.airneis_sdv_app.viewmodel.CartViewModel
 import com.example.airneis_sdv_app.viewmodel.MaterialsViewModel
+import com.example.airneis_sdv_app.viewmodel.ProductViewModel
 import isUserLoggedIn
 
 @Composable
-fun ProductList(products: List<Product>, categoryId: Int, productViewModel: ProductViewModel, navController: NavController,materialsViewModel: MaterialsViewModel) {
+fun ProductList(products: List<Product>, categoryId: Int?, productViewModel: ProductViewModel, navController: NavController,materialsViewModel: MaterialsViewModel) {
     LazyColumn {
         item {
             var isDialogOpen by remember { mutableStateOf(false) }
-            var sortOption by remember { mutableStateOf("asc") }
+            var sortOption by remember { mutableStateOf("desc") }
             var minPrice by remember { mutableStateOf("") }
             var maxPrice by remember { mutableStateOf("") }
-            var selectedMaterials by remember { mutableStateOf<MutableList<String>>(mutableListOf()) }
+            val selectedMaterials by remember { mutableStateOf<MutableList<String>>(mutableListOf()) }
             var isStockChecked by remember { mutableStateOf(true) }
 
             Row(
@@ -151,13 +150,13 @@ fun ProductList(products: List<Product>, categoryId: Int, productViewModel: Prod
             )
         }
         items(products) { product ->
-            ProductItem(product,navController)
+            ProductItem(product,navController,categoryId)
         }
     }
 }
 
 @Composable
-fun ProductItem(product: Product, navController: NavController) {
+fun ProductItem(product: Product, navController: NavController,categoryId: Int?) {
     var quantity by remember { mutableIntStateOf(1) }
     var expanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
@@ -166,7 +165,7 @@ fun ProductItem(product: Product, navController: NavController) {
         .fillMaxWidth()
         .padding(16.dp)
         .clickable {
-            navController.navigate("ProductDetailScreen/${product.id}")
+            navController.navigate("ProductDetailScreen/${categoryId}/${product.id}")
         },
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
@@ -223,7 +222,7 @@ fun ProductItem(product: Product, navController: NavController) {
             Image(
                 painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(LocalContext.current)
-                        .data(data = "https://c1bb0d8a5f1d.airneis.net/medias/serve/${image.filename}")
+                        .data(data = "${Config.BASE_URL}/medias/serve/${image.filename}")
                         .apply(block = fun ImageRequest.Builder.() {
                             error(R.drawable.baseline_error_24)
                         }).build()

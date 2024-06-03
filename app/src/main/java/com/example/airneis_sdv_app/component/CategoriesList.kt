@@ -41,6 +41,8 @@ import coil.request.ImageRequest
 import com.example.airneis_sdv_app.R
 import com.example.airneis_sdv_app.model.Category
 import okhttp3.internal.wait
+import com.example.airneis_sdv_app.util.Config
+
 
 @Composable
 fun CategoryView(category: Category, navController: NavController) {
@@ -93,7 +95,7 @@ fun CategoryView(category: Category, navController: NavController) {
             Image(
                 painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(LocalContext.current)
-                        .data(data = "https://c1bb0d8a5f1d.airneis.net/medias/serve/$filename")
+                        .data(data = "${Config.BASE_URL}/medias/serve/$filename")
                         .apply(block = fun ImageRequest.Builder.() {
                             error(R.drawable.baseline_error_24)
                         }).build()

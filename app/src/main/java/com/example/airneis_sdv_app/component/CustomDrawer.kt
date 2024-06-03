@@ -113,7 +113,7 @@ fun CustomDrawer(
                                     navController.navigate("productScreen/${category.id}")
                                     expanded = false
                                 }
-                                .padding(start = 40.dp,)
+                                .padding(start = 40.dp)
                                 .padding(8.dp)
                         )
                     }

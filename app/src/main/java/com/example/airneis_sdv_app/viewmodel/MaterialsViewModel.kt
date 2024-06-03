@@ -6,6 +6,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.airneis_sdv_app.util.Config
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -23,7 +24,7 @@ class MaterialsViewModel : ViewModel() {
 
     fun loadMaterialsFromAPI(context: Context) {
         viewModelScope.launch {
-            val url = "https://c1bb0d8a5f1d.airneis.net/api/materials"
+            val url = "${Config.BASE_URL}/api/materials"
 
             val request = Request.Builder()
                 .url(url)

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import com.example.airneis_sdv_app.util.Config
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -38,7 +39,7 @@ class LogoutViewModel: ViewModel() {
 
     suspend fun logoutFromServer(context: Context): Boolean {
         return withContext(Dispatchers.IO) {
-            val url = URL("https://c1bb0d8a5f1d.airneis.net/api/auth/logout")
+            val url = URL("${Config.BASE_URL}/api/auth/logout")
             (url.openConnection() as HttpsURLConnection).run {
                 try {
                     requestMethod = "POST"

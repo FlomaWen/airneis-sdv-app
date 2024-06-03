@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.airneis_sdv_app.model.CategoriesResponse
 import com.example.airneis_sdv_app.model.Category
+import com.example.airneis_sdv_app.util.Config
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,7 @@ class CategoryViewModel : ViewModel() {
 
     fun getCategories() {
         viewModelScope.launch(Dispatchers.IO) {
-            val url = URL("https://c1bb0d8a5f1d.airneis.net/api/categories")
+            val url = URL("${Config.BASE_URL}/api/categories")
             val connection = url.openConnection() as HttpURLConnection
             try {
                 connection.connect()

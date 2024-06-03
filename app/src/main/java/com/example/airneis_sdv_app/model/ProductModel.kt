@@ -16,8 +16,11 @@ data class ProductsResponse(
     @SerialName("page")
     val page: Int,
 
-    @SerialName("total")
-    val total: Int
+    @SerialName("totalPages")
+    val totalPages: Int,
+
+    @SerialName("productCount")
+    val productCount: Int
 )
 
 @Serializable
@@ -110,4 +113,13 @@ data class BackgroundImage(
     val updatedAt: String
 )
 
+@Serializable
+data class ProductResponse
+    (
+    @SerialName("success")
+    val success: Boolean,
+
+    @SerialName("product")
+    val product: Product
+)
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.airneis_sdv_app.model.ApiResponseSignup
 import com.example.airneis_sdv_app.model.RegistrationState
 import com.example.airneis_sdv_app.model.RegistrationUIState
+import com.example.airneis_sdv_app.util.Config
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,7 +52,7 @@ class SignupViewModel : ViewModel() {
     // Envoie la requête POST à l'API
     private suspend fun registerUser(userData: Map<String, String>): ApiResponseSignup {
         return withContext(Dispatchers.IO) {
-            val url = URL("https://c1bb0d8a5f1d.airneis.net/api/auth/register")
+            val url = URL("${Config.BASE_URL}/api/auth/register")
             (url.openConnection() as HttpsURLConnection).run {
                 try {
                     requestMethod = "POST"

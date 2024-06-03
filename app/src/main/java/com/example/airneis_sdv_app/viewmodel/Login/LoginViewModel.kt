@@ -2,13 +2,13 @@ package com.example.airneis_sdv_app.viewmodel.Login
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.airneis_sdv_app.model.ApiResponseLogin
 import com.example.airneis_sdv_app.model.LoginState
 import com.example.airneis_sdv_app.model.TokensResponse
+import com.example.airneis_sdv_app.util.Config
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,7 +53,7 @@ class LoginViewModel(private val context:Context) : ViewModel() {
 
     private suspend fun loginUser(userData: Map<String, String>, context: Context): ApiResponseLogin {
         return withContext(Dispatchers.IO) {
-            val url = URL("https://c1bb0d8a5f1d.airneis.net/api/auth/login")
+            val url = URL("${Config.BASE_URL}/api/auth/login")
             (url.openConnection() as HttpsURLConnection).run {
                 try {
                     requestMethod = "POST"
@@ -90,7 +90,7 @@ class LoginViewModel(private val context:Context) : ViewModel() {
         val refreshToken = prefs.getString("refreshToken", null) ?: return false
 
         return withContext(Dispatchers.IO) {
-            val url = URL("https://c1bb0d8a5f1d.airneis.net/api/auth/refresh")
+            val url = URL("${Config.BASE_URL}/api/auth/refresh")
             (url.openConnection() as HttpsURLConnection).run {
                 try {
                     requestMethod = "POST"

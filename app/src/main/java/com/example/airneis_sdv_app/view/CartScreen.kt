@@ -138,6 +138,7 @@ fun CartItemView(cartItem: CartItem, context: Context,onDeleteClick: () -> Unit)
             val totalPriceForItem = cartItem.product.price.toDouble() * cartItem.quantity
             Text("Prix total: $totalPriceForItem €", style = MaterialTheme.typography.bodySmall)
         }
+        
         IconButton(onClick = onDeleteClick) {
             Icon(imageVector = Icons.Default.Delete, contentDescription = "Supprimer")
         }

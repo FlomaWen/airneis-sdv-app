@@ -1,6 +1,7 @@
 package com.example.airneis_sdv_app.model
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 data class CategoriesResponse(
@@ -10,36 +11,36 @@ data class CategoriesResponse(
 
 @Serializable
 data class Category(
-    @SerializedName("id")
+    @SerialName("id")
     val id: Int,
-    @SerializedName("name")
+    @SerialName("name")
     val name: String,
-    @SerializedName("description")
+    @SerialName("description")
     val description: String,
-    @SerializedName("slug")
+    @SerialName("slug")
     val slug: String,
-    @SerializedName("createdAt")
+    @SerialName("createdAt")
     val createdAt: String,
-    @SerializedName("updatedAt")
+    @SerialName("updatedAt")
     val updatedAt: String,
-    @SerializedName("thumbnail")
+    @SerialName("thumbnail")
     val thumbnail: Thumbnail?
 )
 
 @Serializable
 data class Thumbnail(
-    @SerializedName("id")
+    @SerialName("id")
     val id: Int,
-    @SerializedName("name")
+    @SerialName("name")
     val name: String,
-    @SerializedName("filename")
+    @SerialName("filename")
     val filename: String,
-    @SerializedName("type")
+    @SerialName("type")
     val type: String,
-    @SerializedName("size")
+    @SerialName("size")
     val size: Int,
-    @SerializedName("createdAt")
+    @SerialName("createdAt")
     val createdAt: String,
-    @SerializedName("updatedAt")
+    @SerialName("updatedAt")
     val updatedAt: String
 )

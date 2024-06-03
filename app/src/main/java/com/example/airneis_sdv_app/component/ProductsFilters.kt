@@ -1,5 +1,6 @@
 package com.example.airneis_sdv_app.component
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +17,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,13 +38,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.airneis_sdv_app.data.FilterState
+import com.example.airneis_sdv_app.ui.theme.BlueAIRNEIS
 import com.example.airneis_sdv_app.viewmodel.MaterialsViewModel
 
 
+@SuppressLint("MutableCollectionMutableState")
 @Composable
 fun ProductsFilters(
     productViewModel: ProductViewModel,
-    categoryId: Int,
+    categoryId: Int?,
     materialsViewModel: MaterialsViewModel,
     initialMinPrice: String,
     initialMaxPrice: String,
@@ -52,7 +57,7 @@ fun ProductsFilters(
 ) {
     var minPrice by rememberSaveable { mutableStateOf(initialMinPrice) }
     var maxPrice by rememberSaveable { mutableStateOf(initialMaxPrice) }
-    var selectedMaterials by rememberSaveable { mutableStateOf(initialSelectedMaterials.toMutableList()) }
+    val selectedMaterials by rememberSaveable { mutableStateOf(initialSelectedMaterials.toMutableList()) }
     var isStockChecked by rememberSaveable { mutableStateOf(initialIsStockChecked) }
 
     Log.d(
@@ -65,7 +70,12 @@ fun ProductsFilters(
         materialsViewModel.loadMaterialsFromAPI(context)
     }
     val materials = materialsViewModel.materials.collectAsState()
-
+    val CheckBlueAIRNEIS = CheckboxDefaults.colors(
+        checkedColor = Color.Blue,
+        uncheckedColor = Color.Gray,
+        checkmarkColor = Color.White,
+        disabledIndeterminateColor = Color.DarkGray
+    )
     Column(modifier = Modifier.padding(16.dp)) {
         Row(
             modifier = Modifier
@@ -132,7 +142,7 @@ fun ProductsFilters(
         }
         Text(text = "Stock", fontSize = 12.sp)
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Checkbox(checked = isStockChecked, onCheckedChange = { isStockChecked = it })
+            Checkbox(checked = isStockChecked, onCheckedChange = { isStockChecked = it }, colors = CheckBlueAIRNEIS)
             Text(text = "En stock")
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly){
@@ -162,7 +172,10 @@ fun ProductsFilters(
             },
             modifier = Modifier
                 .height(36.dp)
-                .width(100.dp)
+                .width(100.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = BlueAIRNEIS
+            )
         ) {
             Text("Filtrer", fontSize = 10.sp)
         }
