@@ -1,4 +1,4 @@
-package com.example.airneis_sdv_app.component
+package com.example.airneis_sdv_app.component.GlobalApp.Drawer
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,14 +27,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.example.airneis_sdv_app.viewmodel.LogoutViewModel
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.airneis_sdv_app.model.Category
-import com.example.airneis_sdv_app.model.NavigationItem
-
+import com.example.airneis_sdv_app.model.Drawer.NavigationItem
+import com.example.airneis_sdv_app.viewmodel.LogoutViewModel
 
 @Composable
 fun CustomDrawer(
@@ -118,6 +117,8 @@ fun CustomDrawer(
                         )
                     }
                 }
+            } else if (navigationItem == NavigationItem.Account && !isUserLoggedIn) {
+                // Ne rien faire si l'utilisateur n'est pas connecté et que l'élément est le compte
             } else if (navigationItem != NavigationItem.Profile || !isUserLoggedIn) {
                 NavigationItemView(
                     navigationItem = navigationItem,

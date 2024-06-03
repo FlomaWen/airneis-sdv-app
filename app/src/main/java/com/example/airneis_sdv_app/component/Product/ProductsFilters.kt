@@ -1,4 +1,4 @@
-package com.example.airneis_sdv_app.component
+package com.example.airneis_sdv_app.component.Product
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -67,7 +67,7 @@ fun ProductsFilters(
 
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        materialsViewModel.loadMaterialsFromAPI(context)
+        materialsViewModel.loadMaterialsFromAPI()
     }
     val materials = materialsViewModel.materials.collectAsState()
     val CheckBlueAIRNEIS = CheckboxDefaults.colors(

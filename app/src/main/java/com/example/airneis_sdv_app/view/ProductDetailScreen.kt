@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,7 +22,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -32,13 +30,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.example.airneis_sdv_app.component.AppTopBar
-import com.example.airneis_sdv_app.component.CustomDrawer
-import com.example.airneis_sdv_app.component.DetailProduct
-import com.example.airneis_sdv_app.model.CustomDrawerState
-import com.example.airneis_sdv_app.model.NavigationItem
-import com.example.airneis_sdv_app.model.isOpened
-import com.example.airneis_sdv_app.model.opposite
+import com.example.airneis_sdv_app.component.GlobalApp.AppTopBar
+import com.example.airneis_sdv_app.component.GlobalApp.Drawer.CustomDrawer
+import com.example.airneis_sdv_app.component.Product.DetailProduct
+import com.example.airneis_sdv_app.model.Drawer.CustomDrawerState
+import com.example.airneis_sdv_app.model.Drawer.NavigationItem
+import com.example.airneis_sdv_app.model.Drawer.isOpened
+import com.example.airneis_sdv_app.model.Drawer.opposite
 import com.example.airneis_sdv_app.viewmodel.CategoryViewModel
 import com.example.airneis_sdv_app.viewmodel.ProductViewModel
 import isUserLoggedIn
@@ -128,7 +126,7 @@ fun DetailProductContent(
             AppTopBar(
                 title = "ÀIRNEIS - $categoryName",
                 onMenuClick = { onDrawerClick(drawerState.opposite()) },
-                onSearchClick = { /* TODO */ }
+                onSearchClick = { navController.navigate("search") }
             )
         },
         content = { paddingValues ->

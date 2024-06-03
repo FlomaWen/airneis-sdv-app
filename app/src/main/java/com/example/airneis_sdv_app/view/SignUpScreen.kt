@@ -22,11 +22,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.airneis_sdv_app.component.CustomDrawer
-import com.example.airneis_sdv_app.component.RegistrationForm
-import com.example.airneis_sdv_app.model.CustomDrawerState
-import com.example.airneis_sdv_app.model.NavigationItem
-import com.example.airneis_sdv_app.model.isOpened
+import com.example.airneis_sdv_app.component.Forms.RegistrationForm
+import com.example.airneis_sdv_app.component.GlobalApp.Drawer.CustomDrawer
+import com.example.airneis_sdv_app.model.Drawer.CustomDrawerState
+import com.example.airneis_sdv_app.model.Drawer.NavigationItem
+import com.example.airneis_sdv_app.model.Drawer.isOpened
 import com.example.airneis_sdv_app.util.coloredShadow
 import com.example.airneis_sdv_app.viewmodel.CategoryViewModel
 import com.example.airneis_sdv_app.viewmodel.SignUp.SignupUIEvent
@@ -90,7 +90,8 @@ fun SignUpScreen(categoryViewModel: CategoryViewModel, navController: NavControl
                             alpha = 0.1f,
                             shadowRadius = 50.dp
                         ),
-                    signupViewModel = signupViewModel
+                    signupViewModel = signupViewModel,
+                    navController = navController
                 )
                 if (signupViewModel.signUpInProgress.value) {
                     CircularProgressIndicator()

@@ -1,4 +1,4 @@
-package com.example.airneis_sdv_app.component
+package com.example.airneis_sdv_app.component.GlobalApp
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu

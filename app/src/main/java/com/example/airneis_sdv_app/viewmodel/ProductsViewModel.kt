@@ -95,8 +95,10 @@ class ProductViewModel : ViewModel() {
         val baseUrl = "${Config.BASE_URL}/api/products"
         val parameters = mutableListOf<String>()
 
-        // Add categoryId
-        parameters.add("categories=$categoryId")
+        // Add categoryId only if it's not null
+        categoryId?.let {
+            parameters.add("categories=$it")
+        }
 
         // Add search
         search?.let { parameters.add("search=$it") }
@@ -136,6 +138,7 @@ class ProductViewModel : ViewModel() {
 
         return URL(urlWithParams)
     }
+
 
 
     private val _product = MutableStateFlow<Product?>(null)

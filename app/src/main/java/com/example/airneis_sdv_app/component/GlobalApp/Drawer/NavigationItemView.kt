@@ -1,4 +1,4 @@
-package com.example.airneis_sdv_app.component
+package com.example.airneis_sdv_app.component.GlobalApp.Drawer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.airneis_sdv_app.model.NavigationItem
+import com.example.airneis_sdv_app.model.Drawer.NavigationItem
 import com.example.airneis_sdv_app.ui.theme.BlueAIRNEIS
 
 @Composable

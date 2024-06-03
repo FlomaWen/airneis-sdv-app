@@ -22,7 +22,7 @@ class MaterialsViewModel : ViewModel() {
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> get() = _errorMessage
 
-    fun loadMaterialsFromAPI(context: Context) {
+    fun loadMaterialsFromAPI() {
         viewModelScope.launch {
             val url = "${Config.BASE_URL}/api/materials"
 

@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.airneis_sdv_app.view.AccountScreen
 import com.example.airneis_sdv_app.view.CartScreen
 import com.example.airneis_sdv_app.view.LoginScreen
 import com.example.airneis_sdv_app.view.MainScreen
@@ -16,6 +17,9 @@ import com.example.airneis_sdv_app.view.ProductDetailScreen
 import com.example.airneis_sdv_app.view.ProductScreen
 import com.example.airneis_sdv_app.view.SearchScreen
 import com.example.airneis_sdv_app.view.SignUpScreen
+import com.example.airneis_sdv_app.viewmodel.Account.AccountViewModel
+import com.example.airneis_sdv_app.viewmodel.Account.AddressViewModel
+import com.example.airneis_sdv_app.viewmodel.Account.PaymentMethodsViewModel
 import com.example.airneis_sdv_app.viewmodel.CartViewModel
 import com.example.airneis_sdv_app.viewmodel.CategoryViewModel
 import com.example.airneis_sdv_app.viewmodel.MaterialsViewModel
@@ -25,6 +29,9 @@ class MainActivity : ComponentActivity() {
     private val categoryViewModel by lazy { CategoryViewModel() }
     private val productViewModel by lazy { ProductViewModel() }
     private val materialsViewModel by lazy { MaterialsViewModel() }
+    private val accountViewModel by lazy { AccountViewModel() }
+    private val paymentMethodsViewModel by lazy { PaymentMethodsViewModel() }
+    private val adressViewModel by lazy { AddressViewModel() }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         CartViewModel.initialize(this)
@@ -60,7 +67,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-                    composable("SearchScreen") {
+                    composable("search") {
                         SearchScreen(categoryViewModel = categoryViewModel, productViewModel = productViewModel,navController = navController,materialsViewModel = materialsViewModel)
                     }
                     composable("CartScreen"){
@@ -74,6 +81,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable("OrderScreen"){
                         OrderScreen(navController = navController,categoryViewModel = categoryViewModel)
+                    }
+                    composable("AccountScreen"){
+                        AccountScreen(navController = navController,categoryViewModel = categoryViewModel,accountViewModel = accountViewModel,paymentMethodsViewModel = paymentMethodsViewModel,adressViewModel = adressViewModel)
                     }
                 }
             }

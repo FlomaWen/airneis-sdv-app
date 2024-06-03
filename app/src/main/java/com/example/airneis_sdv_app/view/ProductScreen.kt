@@ -31,13 +31,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.airneis_sdv_app.component.AppTopBar
-import com.example.airneis_sdv_app.component.CustomDrawer
-import com.example.airneis_sdv_app.component.ProductList
-import com.example.airneis_sdv_app.model.CustomDrawerState
-import com.example.airneis_sdv_app.model.NavigationItem
-import com.example.airneis_sdv_app.model.isOpened
-import com.example.airneis_sdv_app.model.opposite
+import com.example.airneis_sdv_app.component.GlobalApp.AppTopBar
+import com.example.airneis_sdv_app.component.GlobalApp.Drawer.CustomDrawer
+import com.example.airneis_sdv_app.component.Product.ProductList
+import com.example.airneis_sdv_app.model.Drawer.CustomDrawerState
+import com.example.airneis_sdv_app.model.Drawer.NavigationItem
+import com.example.airneis_sdv_app.model.Drawer.isOpened
+import com.example.airneis_sdv_app.model.Drawer.opposite
 import com.example.airneis_sdv_app.util.coloredShadow
 import com.example.airneis_sdv_app.viewmodel.CategoryViewModel
 import com.example.airneis_sdv_app.viewmodel.MaterialsViewModel
@@ -155,7 +155,7 @@ fun ProductContent(
                     .padding(paddingValues)
                     .fillMaxSize()
             ) {
-                    ProductList(products = products,categoryId = categoryId,productViewModel = productViewModel,navController = navController, materialsViewModel = materialsViewModel)
+                    ProductList(products = products,categoryId = categoryId,productViewModel = productViewModel,navController = navController, materialsViewModel = materialsViewModel, searchQuery = "",)
             }
         }
     )

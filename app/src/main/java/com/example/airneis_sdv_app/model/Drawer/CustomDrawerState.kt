@@ -1,4 +1,4 @@
-package com.example.airneis_sdv_app.model
+package com.example.airneis_sdv_app.model.Drawer
 
 enum class CustomDrawerState {
     Opened,

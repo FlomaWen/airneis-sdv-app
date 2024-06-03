@@ -1,4 +1,4 @@
-package com.example.airneis_sdv_app.component
+package com.example.airneis_sdv_app.component.Forms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,9 +24,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.airneis_sdv_app.model.CustomDrawerState
+import androidx.navigation.NavController
+import com.example.airneis_sdv_app.component.GlobalApp.AppTopBar
+import com.example.airneis_sdv_app.model.Drawer.CustomDrawerState
 import com.example.airneis_sdv_app.model.RegistrationUIState
-import com.example.airneis_sdv_app.model.opposite
+import com.example.airneis_sdv_app.model.Drawer.opposite
 import com.example.airneis_sdv_app.ui.theme.BlueAIRNEIS
 import com.example.airneis_sdv_app.viewmodel.SignUp.SignupUIEvent
 import com.example.airneis_sdv_app.viewmodel.SignUp.SignupViewModel
@@ -41,7 +43,8 @@ fun RegistrationForm(
     drawerState: CustomDrawerState,
     onDrawerClick: (CustomDrawerState) -> Unit,
     modifier: Modifier,
-    signupViewModel: SignupViewModel
+    signupViewModel: SignupViewModel,
+    navController: NavController
 ) {
     Scaffold(
         modifier = modifier,
@@ -51,7 +54,7 @@ fun RegistrationForm(
                 onMenuClick = {
                     onDrawerClick(drawerState.opposite())
                 },
-                onSearchClick = { /* TODO Handle search */ }
+                onSearchClick = { navController.navigate("search") }
             )
         },
         content = { paddingValues ->
@@ -60,11 +63,9 @@ fun RegistrationForm(
                     .padding(paddingValues)
                     .fillMaxSize()
                     .background(Color.White)
-                    .clickable(onClick = {
-                        if (drawerState == CustomDrawerState.Opened) onDrawerClick(
-                            CustomDrawerState.Closed
-                        )
-                    }),
+                    .clickable(enabled = drawerState == CustomDrawerState.Opened) {
+                        onDrawerClick(CustomDrawerState.Closed)
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Column(

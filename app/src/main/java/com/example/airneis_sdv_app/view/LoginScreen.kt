@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,11 +21,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.airneis_sdv_app.component.CustomDrawer
-import com.example.airneis_sdv_app.component.LoginForm
-import com.example.airneis_sdv_app.model.CustomDrawerState
-import com.example.airneis_sdv_app.model.NavigationItem
-import com.example.airneis_sdv_app.model.isOpened
+import com.example.airneis_sdv_app.component.GlobalApp.Drawer.CustomDrawer
+import com.example.airneis_sdv_app.component.Forms.LoginForm
+import com.example.airneis_sdv_app.model.Drawer.CustomDrawerState
+import com.example.airneis_sdv_app.model.Drawer.NavigationItem
+import com.example.airneis_sdv_app.model.Drawer.isOpened
 import com.example.airneis_sdv_app.util.coloredShadow
 import com.example.airneis_sdv_app.viewmodel.CategoryViewModel
 import com.example.airneis_sdv_app.viewmodel.Login.LoginViewModel
@@ -88,7 +87,7 @@ fun LoginScreen(
                             shadowRadius = 50.dp
                         ),
                     navController = navController
-                    )
+                )
         }
     }
 

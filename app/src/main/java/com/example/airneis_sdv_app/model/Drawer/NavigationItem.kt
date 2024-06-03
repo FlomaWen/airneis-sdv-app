@@ -1,4 +1,4 @@
-package com.example.airneis_sdv_app.model
+package com.example.airneis_sdv_app.model.Drawer
 
 import com.example.airneis_sdv_app.R
 
@@ -31,5 +31,10 @@ enum class NavigationItem(
         icon = R.drawable.baseline_logout_24,
         title = "Se déconnecter",
         route = "LogoutScreen"
+    ),
+    Account(
+        icon = R.drawable.baseline_person_24,
+        title = "Mon compte",
+        route = "AccountScreen"
     )
 }
