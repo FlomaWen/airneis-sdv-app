@@ -69,81 +69,80 @@ Cette application a été développée dans le cadre du programme de développem
 
 ### Structure du Projet
 
-├── component
-│ ├── Account
-│ │ ├── AccountContent.kt
-│ │ ├── AdressDialog.kt
-│ │ ├── AdressesList.kt
-│ │ ├── DialogAccount.kt
-│ │ ├── PasswordChangeDialog.kt
-│ │ └── PaymentList.kt
-│ ├── Caroussels
-│ │ ├── CarousselData.kt
-│ │ └── CarousselNoData.kt
-│ ├── Forms
-│ │ ├── LoginForm.kt
-│ │ └── RegistrationForm.kt
-│ └── GlobalApp
-│ ├── Drawer
-│ │ ├── AppTopBar.kt
-│ │ ├── ButtonStyled.kt
-│ │ ├── SimpleButtonNav.kt
-│ │ ├── SortByPriceText.kt
-│ │ └── TextInputStyled.kt
-├── data
-│ ├── AuthTokenStorage.kt
-│ └── FiltersState.kt
-├── model
-│ ├── Drawer
-| | | ├── CustomDrawerState.kt
-| | | └── NavigationItem.kt
-│ │ ├── AccountModel.kt
-│ │ ├── AdressesModel.kt
-│ │ ├── CartModel.kt
-│ │ ├── CategoryModel.kt
-│ │ ├── LoginModel.kt
-│ │ ├── MaterialsModel.kt
-│ │ ├── PaymentModel.kt
-│ │ ├── ProductModel.kt
-│ │ └── SignUpModel.kt
-├── ui.theme
-│ ├── Color.kt
-│ ├── Theme.kt
-│ └── Type.kt
-├── util
-│ ├── Base_url_api.kt
-│ └── Functions.kt
-├── view
-│ ├── AccountScreen.kt
-│ ├── CartScreen.kt
-│ ├── LoginScreen.kt
-│ ├── MainScreen.kt
-│ ├── OrderScreen.kt
-│ ├── ProductDetailScreen.kt
-│ ├── ProductScreen.kt
-│ ├── SearchScreen.kt
-│ └── SignUpScreen.kt
-└── viewmodel
-├── Account
-│ ├── AccountViewModel.kt
-│ ├── AdressesViewModel.kt
-│ └── PaymentViewModel.kt
-├── Login
-│ ├── LoginUIEvent.kt
-│ └── LoginViewModel.kt
-├── SignUp
-│ ├── SignUpUIEvent.kt
-│ └── SignUpViewModel.kt
-├── CartViewModel.kt
-├── CategoryViewModel.kt
-├── LogoutViewModel.kt
-├── MaterialsViewModel.kt
-├── ProductsViewModel.kt
-└── MainActivity.kt
+Le projet est organisé selon les meilleures pratiques en matière d'architecture logicielle, utilisant le modèle MVVM (Model-View-ViewModel) pour séparer les préoccupations.
+
+#### Arborescence des Dossiers
+
+- `component/Account/AccountContent.kt` : Contenu de la page de compte.
+- `component/Account/AdressDialog.kt` : Dialogues pour l'ajout et la modification d'adresses.
+- `component/Account/AdressesList.kt` : Liste des adresses de l'utilisateur.
+- `component/Account/DialogAccount.kt` : Dialogues spécifiques aux comptes utilisateurs.
+- `component/Account/PasswordChangeDialog.kt` : Dialogue pour le changement de mot de passe.
+- `component/Account/PaymentList.kt` : Liste des méthodes de paiement.
+
+- `component/Caroussels/CarousselData.kt` : Gestion des données pour les caroussels de produits.
+- `component/Caroussels/CarousselNoData.kt` : Affichage d'un caroussel sans données.
+
+- `component/Forms/LoginForm.kt` : Formulaire de connexion.
+- `component/Forms/RegistrationForm.kt` : Formulaire d'inscription.
+
+- `component/GlobalApp/Drawer/AppTopBar.kt` : Barre supérieure de l'application.
+- `component/GlobalApp/Drawer/ButtonStyled.kt` : Boutons stylisés.
+- `component/GlobalApp/Drawer/SimpleButtonNav.kt` : Navigation avec des boutons simples.
+- `component/GlobalApp/Drawer/SortByPriceText.kt` : Texte pour le tri par prix.
+- `component/GlobalApp/Drawer/TextInputStyled.kt` : Champs de saisie stylisés.
+
+- `data/AuthTokenStorage.kt` : Gestion du stockage des tokens d'authentification.
+- `data/FiltersState.kt` : État des filtres de produits.
+
+- `model/Drawer/AccountModel.kt` : Modèle de données pour les comptes utilisateurs.
+- `model/Drawer/AdressesModel.kt` : Modèle de données pour les adresses.
+- `model/Drawer/CartModel.kt` : Modèle de données pour le panier.
+- `model/Drawer/CategoryModel.kt` : Modèle de données pour les catégories de produits.
+- `model/Drawer/LoginModel.kt` : Modèle de données pour la connexion.
+- `model/Drawer/MaterialsModel.kt` : Modèle de données pour les matériaux des produits.
+- `model/Drawer/PaymentModel.kt` : Modèle de données pour les méthodes de paiement.
+- `model/Drawer/ProductModel.kt` : Modèle de données pour les produits.
+- `model/Drawer/SignUpModel.kt` : Modèle de données pour l'inscription.
+
+- `ui.theme/Color.kt` : Définition des couleurs de l'application.
+- `ui.theme/Theme.kt` : Thèmes de l'application.
+- `ui.theme/Type.kt` : Définition des types de texte.
+
+- `util/Base_url_api.kt` : Configuration de l'URL de base de l'API.
+- `util/Functions.kt` : Fonctions utilitaires.
+
+- `view/AccountScreen.kt` : Écran de gestion du compte utilisateur.
+- `view/CartScreen.kt` : Écran du panier.
+- `view/LoginScreen.kt` : Écran de connexion.
+- `view/MainScreen.kt` : Écran principal.
+- `view/OrderScreen.kt` : Écran de récapitulatif de commande.
+- `view/ProductDetailScreen.kt` : Écran de détail des produits.
+- `view/ProductScreen.kt` : Écran de liste des produits.
+- `view/SearchScreen.kt` : Écran de recherche de produits.
+- `view/SignUpScreen.kt` : Écran d'inscription.
+
+- `viewmodel/Account/AccountViewModel.kt` : ViewModel pour les comptes utilisateurs.
+- `viewmodel/Account/AdressesViewModel.kt` : ViewModel pour les adresses.
+- `viewmodel/Account/PaymentViewModel.kt` : ViewModel pour les méthodes de paiement.
+- `viewmodel/Login/LoginUIEvent.kt` : Événements UI pour la connexion.
+- `viewmodel/Login/LoginViewModel.kt` : ViewModel pour la connexion.
+- `viewmodel/SignUp/SignUpUIEvent.kt` : Événements UI pour l'inscription.
+- `viewmodel/SignUp/SignUpViewModel.kt` : ViewModel pour l'inscription.
+- `viewmodel/CartViewModel.kt` : ViewModel pour le panier.
+- `viewmodel/CategoryViewModel.kt` : ViewModel pour les catégories de produits.
+- `viewmodel/LogoutViewModel.kt` : ViewModel pour la déconnexion.
+- `viewmodel/MaterialsViewModel.kt` : ViewModel pour les matériaux des produits.
+- `viewmodel/ProductsViewModel.kt` : ViewModel pour les produits.
+- `viewmodel/MainActivity.kt` : Activité principale de l'application.
 
 ### Modèle Vue VueModel (MVVM)
 
-L'application utilise l'architecture MVVM pour séparer les préoccupations et faciliter la maintenance du code.
+L'application utilise l'architecture MVVM pour séparer les préoccupations et faciliter la maintenance du code. Voici les principaux composants :
+
+- **Model** : Contient les classes de données et les sources de données (locales ou distantes).
+- **View** : Composables Jetpack Compose qui affichent les données et reçoivent les interactions de l'utilisateur.
+- **ViewModel** : Gère la logique d'application et les données à afficher. Utilise LiveData ou StateFlow pour réagir aux changements de données.
 
 ## Technologies Utilisées
 
