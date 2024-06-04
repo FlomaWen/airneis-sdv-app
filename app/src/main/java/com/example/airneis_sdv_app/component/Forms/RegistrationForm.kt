@@ -71,6 +71,7 @@ fun RegistrationForm(
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.fillMaxWidth()
+                        .clickable(enabled = drawerState == CustomDrawerState.Closed) { }
                 ) {
 
                     Text(

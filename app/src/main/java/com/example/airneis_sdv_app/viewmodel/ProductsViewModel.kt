@@ -101,8 +101,9 @@ class ProductViewModel : ViewModel() {
         }
 
         // Add search
-        search?.let { parameters.add("search=$it") }
-
+        if (!search.isNullOrEmpty()) {
+            parameters.add("search=$search")
+        }
         // Add minPrice
         minPrice?.let { parameters.add("minPrice=$it") }
 

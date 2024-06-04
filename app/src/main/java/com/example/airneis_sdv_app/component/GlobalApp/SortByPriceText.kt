@@ -10,7 +10,7 @@ import com.example.airneis_sdv_app.viewmodel.ProductViewModel
 @Composable
 fun SortByPriceText(
     sortOption: String,
-    searchQuery: String,
+    searchQuery: String?,
     minPrice: String,
     maxPrice: String,
     categoryId: Int?,

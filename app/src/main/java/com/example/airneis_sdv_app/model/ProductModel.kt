@@ -62,7 +62,11 @@ data class Product(
     val images: List<Image>? = null,
 
     @SerialName("materials")
-    val materials: List<Material>? = null
+    val materials: List<Material>? = null,
+
+    @SerialName("isFeatured")
+    val isFeatured: Boolean
+
 )
 
 @Serializable

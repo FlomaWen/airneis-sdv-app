@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -46,6 +47,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.airneis_sdv_app.R
+import com.example.airneis_sdv_app.component.Caroussels.CarousselData
 import com.example.airneis_sdv_app.ui.theme.BlueAIRNEIS
 import com.example.airneis_sdv_app.util.Config
 import com.example.airneis_sdv_app.viewmodel.CartViewModel
@@ -113,22 +115,18 @@ fun ProductItem(product: Product, navController: NavController, categoryId: Int?
 
             Spacer(modifier = Modifier.height(8.dp))
             // Product Image
-            product.images?.forEach { image ->
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        ImageRequest.Builder(LocalContext.current)
-                            .data(data = "${Config.BASE_URL}/medias/serve/${image.filename}")
-                            .apply(block = fun ImageRequest.Builder.() {
-                                error(R.drawable.baseline_error_24)
-                            }).build()
-                    ),
-                    contentDescription = "Product Image",
-                    modifier = Modifier
-                        .width(300.dp)
-                        .height(150.dp)
-                        .clip(RoundedCornerShape(12.dp)),
-                    contentScale = ContentScale.Crop
-                )
+            product.images?.let { images ->
+                if (images.isNotEmpty()) {
+                    CarousselData(
+                        images = images.map { image ->
+                            "${Config.BASE_URL}/medias/serve/${image.filename}"
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(max = 200.dp)
+                            .padding(vertical = 8.dp)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))

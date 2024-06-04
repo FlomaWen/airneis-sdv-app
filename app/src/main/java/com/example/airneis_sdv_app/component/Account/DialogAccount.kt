@@ -27,7 +27,6 @@ fun EditFieldDialog(
                     onValueChange = onValueChange,
                     label = { Text(text = fieldToEdit)
                     },
-                    visualTransformation = PasswordVisualTransformation()
                 )
             }
         },
